@@ -29,8 +29,8 @@ COPY --from=builder /go/minio/LICENSE /licenses/LICENSE
 COPY --from=builder /go/minio/dockerscripts/docker-entrypoint.sh /usr/bin/
 
 RUN  \
-     apt update && \
-     apt -y install curl ca-certificates shadow-utils util-linux
+     apt-get update && \
+     apt-get -y install curl ca-certificates util-linux
 
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
 
