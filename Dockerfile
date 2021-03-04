@@ -11,7 +11,7 @@ RUN  \
      git clone https://github.com/minio/minio && cd minio && \
      git checkout master && go install -v -ldflags "$(go run buildscripts/gen-ldflags.go)"
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
+FROM ubuntu:20.04
 
 ENV MINIO_ACCESS_KEY_FILE=access_key \
     MINIO_SECRET_KEY_FILE=secret_key \
@@ -29,10 +29,8 @@ COPY --from=builder /go/minio/LICENSE /licenses/LICENSE
 COPY --from=builder /go/minio/dockerscripts/docker-entrypoint.sh /usr/bin/
 
 RUN  \
-     microdnf update --nodocs && \
-     microdnf install curl ca-certificates shadow-utils util-linux --nodocs && \
-     microdnf clean all && \
-     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+     apt update && \
+     apt -y install curl ca-certificates shadow-utils util-linux
 
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
 
